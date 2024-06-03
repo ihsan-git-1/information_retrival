@@ -1,0 +1,20 @@
+# /vsm.json
+/.ipynb_checkpoints
+/__pycache__
+/utility/__pycache__
+/core/__pycache__
+/.DS_Store
+/env
+/vsm_table.csv
+/state.pkl
+/ir_measures.json
+/glove.840b.300d.txt
+/embeddings.pkl
+/glove.6B.300d.txt
+/wiki_state.pkl
+/antique_state.pkl
+/antique_embed.pkl
+/wiki_embed.pkl
+
+/wiki_embed_suggestions.pkl
+/antique_embed_suggestions.pkl

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Dataset</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <style>
+    body {
+      background: linear-gradient(to right, #76769d, #e1dee9);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .box {
+      max-width: 400px;
+      width: 100%;
+      margin: auto;
+      padding: 2rem;
+    }
+
+    .button.custom-button {
+      background-color: #5c5c7b;
+      border-color: #5c5c7b;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .button.custom-button:hover {
+      background-color: #ffffff;
+      color: #5c5c7b;
+      font-weight: bold;
+      box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    h1.title {
+      color: #5c5c7b;
+    }
+
+    .custom-dropdown {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .custom-dropdown select {
+      display: none;
+    }
+
+    .custom-dropdown-trigger {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #ffffff;
+      color: #5c5c7b;
+      padding: 0.5rem 1rem;
+      border-radius: 0.25rem;
+      border: 1px solid #5c5c7b;
+      cursor: pointer;
+    }
+    .custom-dropdown-trigger::after {
+      content: '\25BC';
+      margin-left: 0.5rem;
+      color: #5c5c7b;
+    }
+    .custom-dropdown-options {
+      position: absolute;
+      z-index: 10;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: #ffffff;
+      border-radius: 0.25rem;
+      box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .custom-dropdown-options.active {
+      display: block;
+    }
+
+    .custom-dropdown-option {
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+    }
+
+    .custom-dropdown-option:hover {
+      background-color: #c9c9c9;
+      color: white;
+    }
+
+  </style>
+</head>
+
+<body>
+  <section class="section">
+    <div class="box">
+      <h1 class="title has-text-centered">Choose Your Dataset</h1>
+      <form action="/choose-dataset" method="get">
+        <div class="field">
+          <div class="control custom-dropdown">
+            <div class="custom-dropdown-trigger">Select Dataset</div>
+            <div class="custom-dropdown-options">
+              <div class="custom-dropdown-option" data-value="antique-dataset">Antique Dataset</div>
+              <div class="custom-dropdown-option" data-value="wiki-dataset">Wiki Dataset</div>
+              <div class="custom-dropdown-option" data-value="antique-embed">Antique Embedded</div>
+            </div>
+            <select name="dataset">
+              <option value="antique-dataset">Antique Dataset</option>
+              <option value="wiki-dataset">Wiki Dataset</option>
+              <option value="antique-embed">Antique Embedded</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <button type="submit" class="button custom-button is-fullwidth">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    document.querySelector('.custom-dropdown-trigger').addEventListener('click', function () {
+      document.querySelector('.custom-dropdown-options').classList.toggle('active');
+    });
+
+    document.querySelectorAll('.custom-dropdown-option').forEach(option => {
+      option.addEventListener('click', function () {
+        document.querySelector('.custom-dropdown-trigger').textContent = this.textContent;
+        document.querySelector('select[name="dataset"]').value = this.getAttribute('data-value');
+        document.querySelector('.custom-dropdown-options').classList.remove('active');
+      });
+    });
+
+    document.addEventListener('click', function (event) {
+      const isClickInside = document.querySelector('.custom-dropdown').contains(event.target);
+      if (!isClickInside) {
+        document.querySelector('.custom-dropdown-options').classList.remove('active');
+      }
+    });
+  </script>
+</body>
+
+</html>

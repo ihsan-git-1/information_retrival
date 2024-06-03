@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="https://unpkg.com/htmx.org@1.9.4"></script>
+  <style>
+    .top-left {
+      position: absolute;
+      left: 3rem;
+    }
+
+    .top-right {
+      position: absolute;
+      right: 3rem;
+    }
+
+    .button.evaluation {
+      background-color: #5c5c7b;
+      border-color: #5c5c7b;
+      color: #ffffff;
+      font-weight: bold;
+    }
+
+    .button.evaluation:hover {
+      background-color: #ffffff;
+      color: #5c5c7b;
+      font-weight: bold;
+      box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .is-centered {
+      justify-content: center;
+      align-items: center;
+    }
+
+    .suggestions {
+      border: 1px solid #ddd;
+      max-height: 150px;
+      overflow-y: auto;
+      background-color: white;
+      position: absolute;
+      width: 100%;
+      z-index: 1000;
+    }
+
+    .suggestion-item {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .suggestion-item:hover {
+      background-color: #f0f0f0;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="section">
+    <div class="top-left">
+      <button class="button is-light" onclick="window.location.href='/'">Back</button>
+    </div>
+    <div class="top-right">
+      <button class="button is-info evaluation" onclick="window.location.href='/evaluation'">Go to Evaluation</button>
+    </div>
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <form id="search-form" hx-get="/search-results" hx-trigger="submit" hx-target="#results"
+          class="field has-addons">
+          <div class="control is-expanded">
+            <input type="text" class="input" placeholder="Search" name="query" id="query-input"
+              hx-get="/giveSuggestions" hx-trigger="keyup changed delay:200ms" hx-target="#suggestions">
+            <div id="suggestions" class="suggestions"></div>
+          </div>
+          <div class="control">
+            <button type="submit" class="button is-info evaluation">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <table class="table is-fullwidth">
+      <thead>
+        <tr>
+          <th>Result</th>
+          <th>Similarity</th>
+        </tr>
+      </thead>
+      <tbody id="results">
+        {% for result in results %}
+        <tr>
+          <td>{{ result.result }}</td>
+          <td>{{ result.similarity }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+
+  <script>
+    document.getElementById('query-input').addEventListener('keydown', function (event) {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        document.getElementById('search-form').dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+      }
+    });
+
+    document.addEventListener('click', function (event) {
+      if (!event.target.closest('#suggestions')) {
+        document.getElementById('suggestions').innerHTML = '';
+      }
+    });
+
+    document.getElementById('suggestions').addEventListener('click', function (event) {
+      if (event.target.matches('.suggestion-item')) {
+        const query = event.target.textContent;
+        document.getElementById('query-input').value = query;
+        document.getElementById('suggestions').innerHTML = '';
+
+        // Perform the search and update the results table
+        fetch(`/search-results?query=${encodeURIComponent(query)}`)
+          .then(response => response.text())
+          .then(html => {
+            document.getElementById('results').innerHTML = html;
+          });
+      }
+    });
+
+    document.addEventListener('htmx:afterRequest', function (event) {
+      if (event.detail.target.id === 'suggestions' && event.detail.requestConfig.headers['HX-Request'] === 'true') {
+        const suggestions = JSON.parse(event.detail.xhr.responseText);
+        const suggestionsContainer = document.getElementById('suggestions');
+        suggestionsContainer.innerHTML = suggestions.map(suggestion => `<div class="suggestion-item">${suggestion}</div>`).join('');
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<style>
+    .button.back {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    h1.title {
+        color: #5c5c7b;
+        font-weight: bold;
+    }
+
+    .button.filter {
+        background-color: #5c5c7b;
+        border-color: #5c5c7b;
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .button.filter:hover {
+        background-color: #ffffff;
+        color: #5c5c7b;
+        font-weight: bold;
+        box-shadow: 0px 6px 20px rgba(0, 0, 0, 0.2);
+    }
+</style>
+
+<body>
+    <section class="section">
+        <div class="container">
+            <h1 class="title">Evaluation</h1>
+            <button class="button is-light back" onclick="window.location.href='/search-page'">Back</button>
+
+            <form method="get" action="/evaluation">
+                <div class="field has-addons">
+                    <div class="control">
+                        <input class="input" type="text" name="query_id" placeholder="Enter Query ID">
+                    </div>
+                    <div class="control">
+                        <button class="button is-info filter" type="submit">Filter</button>
+                    </div>
+                </div>
+            </form>
+
+            <table class="table is-fullwidth">
+                <thead>
+                    <tr>
+                        <th>Query Id</th>
+                        <th>Measure</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody id="results">
+                    {% for item in results %}
+                    <tr>
+                        <td>{{ item.query_id }}</td>
+                        <td>{{ item.measure }}</td>
+                        <td>{{ item.value }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</body>
+
+</html>
