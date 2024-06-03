@@ -26,6 +26,7 @@ An Information Retrieval System designed to efficiently store, retrieve, and man
 - **Run embedding_build.ipynb to train the model and to store the offline models**
 - **Run main_antique_evaluation.ipynb to get antique evaluations with embeddings and without**
 - **Run main_wiki_evaluation.ipynb to get wikiR evaluations**
+- **Run uvicorn main:app --port 8700 --reload to run the Templates** 
 
 ## Installation
 
